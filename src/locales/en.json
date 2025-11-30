@@ -1,0 +1,29 @@
+{
+  "title": "💡 IdeaSpark",
+  "generate": "Give me an idea!",
+  "thinking": "Thinking...",
+  "history": "Saved Ideas",
+  "empty": "No ideas saved yet.",
+  "clearHistory": "Clear All",
+  "shareX": "Share on X",
+  "category": "Category",
+  "themeSwitch": "Toggle Theme",
+  "pinned": "Pinned",
+  "categories": {
+    "random": "Random",
+    "study": "Study",
+    "hobby": "Hobby",
+    "exercise": "Exercise",
+    "development": "Development",
+    "lifestyle": "Lifestyle Improvement",
+    "cooking": "Cooking",
+    "lifehack": "Lifehack",
+    "money": "Money & Savings",
+    "health": "Health",
+    "skill": "Skill Up",
+    "relationships": "Relationships",
+    "creative": "Creative",
+    "content": "Content (Movies/Music/Books)",
+    "productivity": "Productivity"
+  }
+}
