@@ -19,6 +19,14 @@ type RateContext = {
   ttlSeconds: number;
 };
 
+const getLocalizedRateLimitMessage = (language: string, remaining: number) => {
+  const minutes = Math.max(0, remaining);
+  if (language === 'en') {
+    return `Rate limit exceeded. Please wait and try again. (${minutes} minutes remaining)`;
+  }
+  return `レート制限です。（あと${minutes}分）`;
+};
+
 const parseBody = (req: VercelRequest): Record<string, unknown> => {
   if (!req.body) return {};
   if (Buffer.isBuffer(req.body)) {
@@ -165,7 +173,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const rawCategory = pickFirst(body.category ?? req.query.category ?? 'ランダム');
   const category = typeof rawCategory === 'string' && rawCategory.trim() ? rawCategory.trim() : 'ランダム';
   const deviceId = pickFirst(body.deviceId ?? req.query.deviceId);
-  const prompt = `今すぐやってみたくなる小さなアイデアを、1文で具体的に1つだけ出してください。カテゴリ: ${category}`;
+  const rawLanguage = pickFirst(body.lang ?? req.query.lang ?? 'ja');
+  const language = rawLanguage === 'en' ? 'en' : 'ja';
+  const languageLabel = language === 'en' ? 'English' : 'Japanese';
+  const prompt = `今すぐやってみたくなる小さなアイデアを、1文で具体的に1つだけ出してください。カテゴリ: ${category}\nYou must respond in: ${languageLabel}.`;
 
   const cookies = parseCookies(req);
   let cookieDeviceId = cookies[COOKIE_NAME];
@@ -214,7 +225,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const rate = await enforceRateLimit(context);
 
     if (!rate.allowed) {
-      res.status(429).json({ error: 'rate_limit', remaining: rate.remainingMinutes });
+      res.status(429).json({
+        error: 'rate_limit',
+        remaining: rate.remainingMinutes,
+        message: getLocalizedRateLimitMessage(language, rate.remainingMinutes)
+      });
       return;
     }
   } catch (error) {

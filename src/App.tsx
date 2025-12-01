@@ -90,7 +90,7 @@ function App() {
     try {
       const deviceId = await getUniqueDeviceId();
       const categoryLabel = t(`categories.${category}`);
-      const res = await fetch('/api/idea', {
+      const res = await fetch(`/api/idea?lang=${language}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -149,7 +149,7 @@ function App() {
     setCanShare(false);
     try {
       const deviceId = await getUniqueDeviceId();
-      const res = await fetch('/api/idea', {
+      const res = await fetch(`/api/idea?lang=${toLang}&translateFrom=${fromLang}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
